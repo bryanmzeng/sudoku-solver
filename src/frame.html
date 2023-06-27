@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+        <title>Sudoku Solver</title>
+
+        <link rel="stylesheet" type = "text/css" href="style.css">
+        <script src = "sudoku.js"></script>
+    </head>
+
+    <body>
+        <h1>Sudoku Solver</h1>
+        <hr>
+        <div id = "board"></div>
+        <br>
+        <div id = "digits"></div>
+        <br>
+        <div id = "clearbtn"></div>
+        <br>
+        <button type = "button" id ="deletebtn" onclick = "deleteAll()">Clear Board</button>
+        <br>
+        <br>
+        <button type = "button" id = "solvebtn" onclick = "findSolution()">Solve Puzzle</button>
+    </body>
+</html> 
