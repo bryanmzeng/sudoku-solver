@@ -1,7 +1,6 @@
 var numSelected = null;
 var tileSelected = null;
 var clearSelected = null;
-var board = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
 
 window.onload = function() {
     setGame();
@@ -55,13 +54,9 @@ function selectNumber() {
 function selectTile() {
     if (numSelected) {
         this.innerText = numSelected.id;
-        let coords = this.id.split("-");
-        board[parseInt(coords[0])][parseInt(coords[1])] = numSelected.id;
     }
-    if (clearSelected.id == 0) {
+    if (clearSelected.id == "0") {
         this.innerText = "";
-        let coords = this.id.split("-");
-        board[parseInt(coords[0])][parseInt(coords[1])] = 0;
     }
 }
 function selectClear() {
@@ -81,54 +76,66 @@ function deleteAll() {
 
 
 function findSolution() {
-    solve();
+    var board = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
+
     for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-                document.getElementById(r.toString() + "-" + c.toString()).innerText = board[r][c];
+        for (let c = 0; c < 9; c++) {
+            if (document.getElementById(r.toString() + "-" + c.toString()).innerText) {
+                board[r][c] = parseInt(document.getElementById(r.toString() + "-" + c.toString()).innerText);
+            } else {
+                continue;
+            }
         }
-     }
+    }
+
+    solve(board);
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            document.getElementById(r.toString() + "-" + c.toString()).innerText = board[r][c];
+        }
+    }
     
 }
-function solve() {
-    find = findEmpty();
+function solve(bo) {
+    const find = findEmpty(bo);
     if (find[2] == 0) {
         return true;
     }
-    row = find[0];
-    col = find[1];
+    const row = find[0];
+    const col = find[1];
     for (let i = 1; i < 10; i++) {
-        if (validate(i, row, col)) {
-            board[row][col] = i;
-            if (this.solve()) {
+        if (validate(bo,i, row, col)) {
+            bo[row][col] = i;
+            if (solve(bo)) {
                 return true;
             }
-            board[row][col] = 0;
+            bo[row][col] = 0;
         }
     }
     return false;
 }
-function findEmpty() {
+function findEmpty(b) {
     ans = [0,0,0];
-        for (let i = 0 ; i < board.length; i++) {
-            for (let j = 0 ; j < board[i].length; j++) {
-                if (board[i][j] == 0) {
-                    ans[0] = i;
-                    ans[1] = j;
-                    ans[2] = 1;
-                    return ans;
-                }
+    for (let i = 0 ; i < 9; i++) {
+        for (let j = 0 ; j < 9; j++) {
+            if (b[i][j] == 0) {
+                ans[0] = i;
+                ans[1] = j;
+                ans[2] = 1;
+                return ans;
             }
         }
-        return ans;
+    }
+    return ans;
 }
-function validate(num, pos1, pos2) {
-    for (let i = 0; i < board[0].length; i++) {
-        if (board[pos1][i] == num && pos2 != i) {
+function validate(b,num, pos1, pos2) {
+    for (let i = 0; i < b[0].length; i++) {
+        if (b[pos1][i] == num && pos2 != i) {
             return false;
         }
     }
-    for (let i = 0; i < board.length; i++) {
-        if (board[i][pos2] == num && pos1 != i) {
+    for (let i = 0; i < b.length; i++) {
+        if (b[i][pos2] == num && pos1 != i) {
             return false;
         }
     }
@@ -137,7 +144,7 @@ function validate(num, pos1, pos2) {
 
     for (let i = y * 3; i < y * 3 + 3; i++) {
         for (let j = x * 3; j < x * 3 + 3; j++) {
-            if (board[i][j] == num && i != pos1 && j != pos2) {
+            if (b[i][j] == num && i != pos1 && j != pos2) {
                 return false;
             }
         }
